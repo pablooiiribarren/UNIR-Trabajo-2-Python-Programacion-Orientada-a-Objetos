@@ -4,30 +4,47 @@
 import time
 class Producto:
     def __init__(self, nombre, precio, cantidad):
+        
+        nombre_str = str(nombre).strip()
+        if not nombre_str:
+            raise ValueError("El nombre no puede estar vacío.")
+        self.nombre = nombre_str
+
         try:
-            self.nombre = str(nombre)
-        except ValueError:
-                raise ValueError("El nombre no puede estar vacío.")
-        try:
-            self.precio = float(precio)
-        except ValueError:
-            raise ValueError("El precio debe ser un número.")
-        try:
-            self.cantidad = int(cantidad)
-        except cantidad >= 0:
-            raise ValueError("La cantidad no puede ser negativa.")
-    
-    # Implementar métodos para añadir, actualizar y mostrar información de productos
-    def actualizar_producto(self, nuevo_precio):
-        if nuevo_precio < 0:
+            precio_f = float(precio)
+        except (TypeError):
+            raise ValueError("El precio debe ser un número (float).")
+        if precio_f < 0:
             raise ValueError("El precio no puede ser negativo.")
-        self.precio = nuevo_precio
+        self.precio = precio_f
+
+        try:
+            cantidad_i = int(cantidad)
+        except (TypeError, ValueError):
+            raise ValueError("La cantidad debe ser un número entero (int).")
+        if cantidad_i < 0:
+            raise ValueError("La cantidad no puede ser negativa.")
+        self.cantidad = cantidad_i
+
+    # Implementar métodos para añadir, actualizar y mostrar información de productos
+    def actualizar_precio(self, nuevo_precio):
+        try:
+            nuevo = float(nuevo_precio)
+        except (TypeError, ValueError):
+            raise ValueError("El nuevo precio debe ser un número (float).")
+        if nuevo < 0:
+            raise ValueError("El nuevo precio no puede ser negativo.")
+        self.precio = nuevo
         return self.precio
     
     def actualizar_cantidad(self, nueva_cantidad):
-        if nueva_cantidad < 0:
-            raise ValueError("La cantidad no puede ser negativa.")
-        self.cantidad = nueva_cantidad
+        try:
+            nueva = int(nueva_cantidad)
+        except (TypeError, ValueError):
+            raise ValueError("La nueva cantidad debe ser un número entero (int).")
+        if nueva < 0:
+            raise ValueError("La nueva cantidad no puede ser negativa.")
+        self.cantidad = nueva
         return self.cantidad
     
     def calcular_valor_total(self):
@@ -93,7 +110,7 @@ def menu_principal(inventario):
                 try:
                     nuevo_precio = float(input("Ingrese el nuevo precio: "))
                     nueva_cantidad = int(input("Ingrese la nueva cantidad: "))  
-                    producto.actualizar_producto(nuevo_precio)
+                    producto.actualizar_precio(nuevo_precio)
                     producto.actualizar_cantidad(nueva_cantidad)
                     print(f"Producto {nombre} actualizado correctamente.")
                 except ValueError as e:
